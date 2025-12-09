@@ -122,7 +122,11 @@ $movies = $stmt->fetchAll();
                class="w-full border border-gray-300  rounded-lg p-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
       </div>
 
-
+            <div class="mb-4">
+        <label for="itemName5" class="block text-white font-medium mb-2">Total Seats</label>
+        <input type="number" id="itemName5" name="totalseats" placeholder="Number of seats available" value="<?=$editdata['totalseats']?>"
+               class="w-full border border-gray-300  rounded-lg p-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+      </div>
       <!-- Buttons -->
       <div class="flex gap-4">
         <input type="submit" value="Add" name="add" class="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg font-semibold">
@@ -150,6 +154,7 @@ $movies = $stmt->fetchAll();
         <th class="border p-2">Timing</th>
         <th class="border p-2">Days</th>
         <th class="border p-2">Price</th>
+        <th class="border p-2">Total Seats</th>
         <th class="border p-2">Actions</th>
       </tr>
     </thead>
@@ -181,6 +186,7 @@ while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
     echo '<td class="border p-2">' . htmlspecialchars($row['timing']) . '</td>';
     echo '<td class="border p-2">' . htmlspecialchars($row['days']) . '</td>';
     echo '<td class="border p-2">' . htmlspecialchars($row['price']) . '</td>';
+    echo '<td class="border p-2">' . htmlspecialchars($row['totalseats']) . '</td>';
   
 
     echo '<td class="flex border p-2 space-x-2">
@@ -216,14 +222,15 @@ if (isset($_POST['add'])) {
     $date =$_POST['date'];
     $price= $_POST['price'];
     $location= $_POST['location'];
+    $totalseats= $_POST['totalseats'];
 
   
 
 
     try {
         $stmt = $pdo->prepare("
-          INSERT INTO `theatre`(`movieid`, `name`, `timing`, `days`, `date`, `price`,`location`) 
-          VALUES (:movieid,:name,:timing,:days,:date,:price,:location)
+          INSERT INTO `theatre`(`movieid`, `name`, `timing`, `days`, `date`, `price`,`location`,`totalseats`) 
+          VALUES (:movieid,:name,:timing,:days,:date,:price,:location,:totalseats)
         ");
         $stmt->execute([
             ':movieid'=> $movieid,
@@ -233,6 +240,7 @@ if (isset($_POST['add'])) {
             ':date'=> $date,
             ':price'=> $price,
             ':location'=> $location,
+            ':totalseats'=>$totalseats,
         ]);
 
         echo "<script>
