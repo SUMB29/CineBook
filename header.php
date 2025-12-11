@@ -21,9 +21,9 @@
             <img src="assets/img/logo1.png" alt="Logo" width="70">
             <p class="m-auto text-4xl">CineBook</p>
         </span>
-        <div class="flex flex-row gap-4 px-4 py-2">
-            <button id="signupButton" class="bg-red-600 hover:bg-red-700 text-white px-5 py-3 rounded font-semibold mt-2">Sign Up</button>
-            <button id="loginButton" class="bg-red-600 hover:bg-red-700 text-white px-5 py-3 rounded font-semibold mt-2">login</button>
+        <div class="flex flex-row gap-2 px-4 py-2">
+            <button id="signupButton" class="bg-transparent hover:bg-black text-white px-5 py-3 border rounded font-semibold mt-2">Sign Up</button>
+            <button id="loginButton" class="bg-transparent hover:bg-black text-white px-5 py-3 border rounded font-semibold mt-2">login</button>
         </div>
     </nav>
 
