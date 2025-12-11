@@ -15,9 +15,9 @@ $bookingid = intval($_GET['payment']);
 
 $query = "
     SELECT 
-        b.bookingid, b.status, b.bookingdate,
+        b.bookingid AS bid, b.status, b.bookingdate As bdate,
         m.title AS movietitle,
-        t.name, t.price
+        t.name As tname, t.price AS tprice, t.Location AS tlocation
     FROM booking b
     JOIN movies m ON b.movieid = m.movieid
     JOIN theatre t ON b.theatreid = t.theatreid
@@ -45,6 +45,18 @@ if (isset($_POST['confirm_payment'])) {
     $update->bindParam(':bookingid', $bookingid, PDO::PARAM_INT);
     $update->execute();
 
+    $pstmt=$pdo->prepare("INSERT INTO `payments`(`userid`, `bookingId`, `bookingdate`, `movie`, `theatrename`,
+     `theatrelocation`, `price`) VALUES (:userid,:bid,:bdate,:movietitle,:tname,:tlocation,:tprice)");
+    $pstmt->execute([
+        ':userid'=>$_SESSION['userid'],
+        ':bid'=>$booking['bid'],
+        ':bdate'=>$booking['bdate'],
+        ':movietitle'=>$booking['movietitle'],
+        ':tname'=>$booking['tname'],
+        ':tlocation'=>$booking['tlocation'],
+        ':tprice'=>$booking['tprice'],
+    ]);
+
     echo "<div class='text-center mt-10 text-green-600 text-lg'>Payment successful! Thank you.</div>";
     echo "<div class='text-center mt-4'>
             <a href='user_dashboard.php' class='bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded'>
@@ -68,16 +80,16 @@ if (isset($_POST['confirm_payment'])) {
     <h2 class="text-2xl font-bold text-center mb-4 text-gray-800">Confirm Payment</h2>
 
     <div class="mb-6 text-gray-700">
-        <p><strong>Booking ID:</strong> <?= htmlspecialchars($booking['bookingid']) ?></p>
+        <p><strong>Booking ID:</strong> <?= htmlspecialchars($booking['bid']) ?></p>
         <p><strong>Movie:</strong> <?= htmlspecialchars($booking['movietitle']) ?></p>
-        <p><strong>Theatre:</strong> <?= htmlspecialchars($booking['name']) ?></p>
-        <p><strong>Amount:</strong> ₹<?= htmlspecialchars($booking['price']) ?></p>
+        <p><strong>Theatre:</strong> <?= htmlspecialchars($booking['tname']) ?></p>
+        <p><strong>Amount:</strong> ₹<?= htmlspecialchars($booking['tprice']) ?></p>
     </div>
 
     <form method="POST">
         <button type="submit" name="confirm_payment"
             class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-semibold">
-            Pay ₹<?= htmlspecialchars($booking['price']) ?> Now
+            Pay ₹<?= htmlspecialchars($booking['tprice']) ?> Now
         </button>
     </form>
 
