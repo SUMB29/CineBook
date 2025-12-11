@@ -74,12 +74,19 @@ if (isset($_POST['confirm_payment'])) {
     <title>CineBook | Payment | Movie Booking</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="bg-cyan-950 flex items-center justify-center min-h-screen">
 
-<div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-    <h2 class="text-2xl font-bold text-center mb-4 text-gray-800">Confirm Payment</h2>
+<div class="bg-black shadow-lg rounded-lg p-8 w-full max-w-md">
 
-    <div class="mb-6 text-gray-700">
+              <nav class="ml-40 justify-between items-center z-10">
+        <span>
+            <img src="assets/img/logo1.png" alt="Logo" width="53">
+        </span>
+    </nav>
+
+    <h2 class="text-2xl font-bold text-center mb-4 text-white">Confirm Payment</h2>
+
+    <div class="mb-6 text-white">
         <p><strong>Booking ID:</strong> <?= htmlspecialchars($booking['bid']) ?></p>
         <p><strong>Movie:</strong> <?= htmlspecialchars($booking['movietitle']) ?></p>
         <p><strong>Theatre:</strong> <?= htmlspecialchars($booking['tname']) ?></p>
@@ -88,7 +95,7 @@ if (isset($_POST['confirm_payment'])) {
 
     <form method="POST">
         <button type="submit" name="confirm_payment"
-            class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-semibold">
+            class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg font-semibold">
             Pay ₹<?= htmlspecialchars($booking['tprice']) ?> Now
         </button>
     </form>
