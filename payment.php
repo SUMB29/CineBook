@@ -1,6 +1,9 @@
 <?php
 session_start();
 include('connect.php'); 
+
+
+
 try {
     $pdo = new PDO($attr, $user, $pass, $opts);
 } catch (PDOException $e) {
@@ -16,7 +19,7 @@ $bookingid = intval($_GET['payment']);
 $query = "
     SELECT 
         b.bookingid AS bid, b.status, b.bookingdate As bdate,
-        m.title AS movietitle,
+        m.title AS movietitle, b.seats AS bseat
         t.name As tname, t.price AS tprice, t.Location AS tlocation
     FROM booking b
     JOIN movies m ON b.movieid = m.movieid
@@ -27,6 +30,8 @@ $stmt = $pdo->prepare($query);
 $stmt->bindParam(':bookingid', $bookingid, PDO::PARAM_INT);
 $stmt->execute();
 $booking = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$cntSeat=count(explode(",",$booking['bseat']));
 
 if (!$booking) {
     echo "<div class='text-center mt-10 text-red-600 text-lg'>Booking not found.</div>";
@@ -90,13 +95,14 @@ if (isset($_POST['confirm_payment'])) {
         <p><strong>Booking ID:</strong> <?= htmlspecialchars($booking['bid']) ?></p>
         <p><strong>Movie:</strong> <?= htmlspecialchars($booking['movietitle']) ?></p>
         <p><strong>Theatre:</strong> <?= htmlspecialchars($booking['tname']) ?></p>
-        <p><strong>Amount:</strong> ₹<?= htmlspecialchars($booking['tprice']) ?></p>
+        <p><strong>Amount:</strong> ₹<?= htmlspecialchars($booking['tprice'] * $cntSeat) ?></p>
     </div>
 
     <form method="POST">
         <button type="submit" name="confirm_payment"
             class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg font-semibold">
-            Pay ₹<?= htmlspecialchars($booking['tprice']) ?> Now
+            <a href="razorpay.php?claim_id=' . $booking['bid'] . '">
+            Pay ₹<?= htmlspecialchars($booking['tprice'] * $cntSeat) ?> Now</a>
         </button>
     </form>
 
