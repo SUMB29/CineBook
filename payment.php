@@ -19,7 +19,7 @@ $bookingid = intval($_GET['payment']);
 $query = "
     SELECT 
         b.bookingid AS bid, b.status, b.bookingdate As bdate,
-        m.title AS movietitle, b.seats AS bseat
+        m.title AS movietitle, b.seats AS bseat,
         t.name As tname, t.price AS tprice, t.Location AS tlocation
     FROM booking b
     JOIN movies m ON b.movieid = m.movieid
@@ -27,9 +27,9 @@ $query = "
     WHERE b.bookingid = :bookingid
 ";
 $stmt = $pdo->prepare($query);
-$stmt->bindParam(':bookingid', $bookingid, PDO::PARAM_INT);
-$stmt->execute();
-$booking = $stmt->fetch(PDO::FETCH_ASSOC);
+// $stmt->bindParam(':bookingid', $bookingid, PDO::PARAM_INT);
+$stmt->execute([':bookingid'=>$bookingid,]);
+$booking = $stmt->fetch();
 
 $cntSeat=count(explode(",",$booking['bseat']));
 
@@ -49,6 +49,7 @@ if (isset($_POST['confirm_payment'])) {
     $update = $pdo->prepare("UPDATE booking SET status = 2 WHERE bookingid = :bookingid");
     $update->bindParam(':bookingid', $bookingid, PDO::PARAM_INT);
     $update->execute();
+    $amountF=$booking['tprice'] * $cntSeat;
 
     $pstmt=$pdo->prepare("INSERT INTO `payments`(`userid`, `bookingId`, `bookingdate`, `movie`, `theatrename`,
      `theatrelocation`, `price`) VALUES (:userid,:bid,:bdate,:movietitle,:tname,:tlocation,:tprice)");
@@ -59,7 +60,7 @@ if (isset($_POST['confirm_payment'])) {
         ':movietitle'=>$booking['movietitle'],
         ':tname'=>$booking['tname'],
         ':tlocation'=>$booking['tlocation'],
-        ':tprice'=>$booking['tprice'],
+        ':tprice'=>$amountF,
     ]);
 
     echo "<div class='text-center mt-10 text-green-600 text-lg'>Payment successful! Thank you.</div>";
@@ -99,9 +100,9 @@ if (isset($_POST['confirm_payment'])) {
     </div>
 
     <form method="POST">
-        <button type="submit" name="confirm_payment"
+        <button id="payBtn" type="submit" name="confirm_payment"
             class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg font-semibold">
-            <a href="razorpay.php?claim_id=' . $booking['bid'] . '">
+            <a href="razorpay.php?payment=<?= urlencode($bookingid) ?>">
             Pay ₹<?= htmlspecialchars($booking['tprice'] * $cntSeat) ?> Now</a>
         </button>
     </form>
