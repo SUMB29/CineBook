@@ -151,6 +151,13 @@ if(isset($_GET['delete'])){
             ':id'     => $id,
         ]);
 
+        $stmt1 = $pdo->prepare("
+            DELETE FROM `movies` WHERE catid=:id
+        ");
+        $stmt1->execute([
+            ':id'     => $id,
+        ]);
+
         echo "<script>
                 alert('Category deleted successfully!');
                 window.location.href='categories.php';
@@ -163,7 +170,7 @@ if(isset($_GET['delete'])){
 
 }
 
-//update
+// update
 if (isset($_POST['update'])) {
     $catid   = intval($_POST['catid']);   // Hidden input field
     $catname = trim($_POST['catname']);
@@ -174,6 +181,7 @@ if (isset($_POST['update'])) {
             ':catname' => $catname,
             ':catid'   => $catid
         ]);
+
 
         if ($updated) {
             echo "<script>
