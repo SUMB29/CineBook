@@ -68,7 +68,7 @@ $categories = $stmt->fetchAll();
       <!-- Input Field -->
             <div class="mb-4">
           <!-- <label for="category">Select Category:</label> -->
-          <select name="category" id="category" class="border border-b-black p-2 rounded-xl" required>
+          <select name="category" id="category" class="border border-b-black p-2 rounded-xl" multiple required >
           <option value="">-- Choose a Category --</option>
           <?php foreach ($categories as $cat): ?>
             <option value="<?= htmlspecialchars($cat['catid']) ?>">
